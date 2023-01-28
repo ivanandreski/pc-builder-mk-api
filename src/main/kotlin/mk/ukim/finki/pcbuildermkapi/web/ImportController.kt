@@ -14,11 +14,8 @@ class ImportController(
     private val importProductService: ImportProductService
 ) {
     @PostMapping
-    fun importProductList(@RequestParam("file") file: MultipartFile, @RequestParam("category") category: String): ResponseEntity<String?>? {
-        if(category !in arrayOf("CPU", "CASE", "GPU", "STORAGE", "RAM", "MB", "PSU"))
-            return ResponseEntity("Invalid category", HttpStatus.BAD_REQUEST)
-
-        importProductService.importProductList(file, category)
+    fun importProductList(@RequestPart("files") files: Array<MultipartFile>): ResponseEntity<String?>? {
+        importProductService.importProductList(files)
 
         return ResponseEntity("Import successful", HttpStatus.OK)
     }

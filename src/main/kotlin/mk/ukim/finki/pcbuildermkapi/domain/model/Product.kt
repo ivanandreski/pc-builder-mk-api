@@ -11,7 +11,11 @@ data class Product(
     var name: String,
     var priceMkd: Double,
     var originalId: String,
+
+    @Column(columnDefinition="TEXT")
     var originalUrl: String,
+
+    @Column(columnDefinition="TEXT")
     var imageUrl: String?,
 
     @Column(columnDefinition="TEXT")
