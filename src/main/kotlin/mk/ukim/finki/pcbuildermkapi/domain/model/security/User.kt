@@ -19,7 +19,7 @@ class User(
     @GeneratedValue
     private val id: Long? = null
     override fun getAuthorities(): MutableCollection<out GrantedAuthority> {
-        return mutableListOf(SimpleGrantedAuthority(role.name))
+        return mutableListOf(SimpleGrantedAuthority("ROLE_" + role.name))
     }
 
     override fun getPassword(): String {
