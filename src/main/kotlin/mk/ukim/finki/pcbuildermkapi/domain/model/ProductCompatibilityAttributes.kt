@@ -2,9 +2,6 @@ package mk.ukim.finki.pcbuildermkapi.domain.model
 
 import jakarta.persistence.*
 import mk.ukim.finki.pcbuildermkapi.domain.enumeation.*
-import org.hibernate.annotations.CreationTimestamp
-import org.hibernate.annotations.UpdateTimestamp
-import java.time.LocalDateTime
 
 @Entity
 data class ProductCompatibilityAttributes(
@@ -43,16 +40,4 @@ data class ProductCompatibilityAttributes(
     var numOf35InchBays: Int? = null,
 
     var numOfM2Slots: Int? = null
-) {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    val id: Long? = null
-
-    @field:CreationTimestamp
-    @Column(columnDefinition = "TIMESTAMP")
-    lateinit var createdAt: LocalDateTime
-
-    @field:UpdateTimestamp
-    @Column(columnDefinition = "TIMESTAMP")
-    lateinit var modifiedAt: LocalDateTime
-}
+) : BaseEntity()

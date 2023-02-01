@@ -1,9 +1,6 @@
 package mk.ukim.finki.pcbuildermkapi.domain.model
 
 import jakarta.persistence.*
-import org.hibernate.annotations.CreationTimestamp
-import org.hibernate.annotations.UpdateTimestamp
-import java.time.LocalDateTime
 
 @Entity
 class StoreLocation(
@@ -22,19 +19,7 @@ class StoreLocation(
     var longitude: Long? = null,
 
     var latitude: Long? = null,
-) {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    val id: Long? = null
-
-    @field:CreationTimestamp
-    @Column(columnDefinition = "TIMESTAMP")
-    lateinit var createdAt: LocalDateTime
-
-    @field:UpdateTimestamp
-    @Column(columnDefinition = "TIMESTAMP")
-    lateinit var modifiedAt: LocalDateTime
-
+) : BaseEntity() {
     @OneToMany(mappedBy = "storeLocation", cascade = [CascadeType.ALL], orphanRemoval = true)
     val products: List<ProductInStoreLocation> = ArrayList()
 

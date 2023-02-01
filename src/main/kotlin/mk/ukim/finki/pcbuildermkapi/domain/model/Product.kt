@@ -1,10 +1,6 @@
 package mk.ukim.finki.pcbuildermkapi.domain.model
 
 import jakarta.persistence.*
-import mk.ukim.finki.pcbuildermkapi.domain.dto.ScrapedProduct
-import org.hibernate.annotations.CreationTimestamp
-import org.hibernate.annotations.UpdateTimestamp
-import java.time.LocalDateTime
 
 @Entity
 data class Product(
@@ -33,19 +29,7 @@ data class Product(
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id", nullable = false)
     var category: Category? = null,
-) {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    val id: Long? = null
-
-    @field:CreationTimestamp
-    @Column(columnDefinition = "TIMESTAMP")
-    lateinit var createdAt: LocalDateTime
-
-    @field:UpdateTimestamp
-    @Column(columnDefinition = "TIMESTAMP")
-    lateinit var modifiedAt: LocalDateTime
-
+) : BaseEntity() {
     @OneToMany(mappedBy = "product", cascade = [CascadeType.ALL], orphanRemoval = true)
     val productsInStoreLocation: List<ProductInStoreLocation> = ArrayList()
 
