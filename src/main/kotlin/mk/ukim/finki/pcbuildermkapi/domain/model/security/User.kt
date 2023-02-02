@@ -2,6 +2,7 @@ package mk.ukim.finki.pcbuildermkapi.domain.model.security
 
 import jakarta.persistence.*
 import mk.ukim.finki.pcbuildermkapi.domain.model.BaseEntity
+import mk.ukim.finki.pcbuildermkapi.domain.model.CustomPcBuild
 import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.security.core.userdetails.UserDetails
@@ -13,7 +14,11 @@ class User(
     private var password: String,
 
     @Enumerated(EnumType.STRING)
-    var role: Role
+    var role: Role,
+
+    @OneToOne(cascade = [CascadeType.ALL])
+    @JoinColumn(name = "custom_pc_build_id", referencedColumnName = "id")
+    var customPcBuild: CustomPcBuild? = null,
 ) : UserDetails, BaseEntity() {
     override fun getAuthorities(): MutableCollection<out GrantedAuthority> {
         return mutableListOf(SimpleGrantedAuthority("ROLE_" + role.name))

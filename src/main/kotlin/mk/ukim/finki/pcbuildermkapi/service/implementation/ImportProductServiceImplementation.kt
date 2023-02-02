@@ -1,6 +1,6 @@
 package mk.ukim.finki.pcbuildermkapi.service.implementation
 
-import mk.ukim.finki.pcbuildermkapi.domain.dto.ScrapedProduct
+import mk.ukim.finki.pcbuildermkapi.domain.dto.`in`.ScrapedProduct
 import mk.ukim.finki.pcbuildermkapi.domain.model.*
 import mk.ukim.finki.pcbuildermkapi.repository.*
 import mk.ukim.finki.pcbuildermkapi.service.ImportProductService
@@ -28,15 +28,24 @@ class ImportProductServiceImplementation(
                 continue
             var ddStoreExists = storeLocationRepository.existsByName("DDStore")
             for (scrapedProduct in scrapedProductList) {
+                categoryName = when(categoryName) {
+                    "HDD" -> "STORAGE"
+                    "SSD" -> "STORAGE"
+                    else -> categoryName
+                }
                 val category = categoryRepository.findByName(categoryName)
-                    .orElseGet { categoryRepository.save(Category(categoryName)) }
+                    .orElseGet { categoryRepository.save(
+                        Category(
+                            name = categoryName
+                        )
+                    ) }
 
                 val storeName = scrapedProduct.storeName
                 val store = storeRepository.findByName(storeName)
-                    .orElseGet { storeRepository.save(Store(storeName)) }
+                    .orElseGet { storeRepository.save(Store(name = storeName)) }
 
                 if (storeName == "DDStore" && !ddStoreExists) {
-                    storeLocationRepository.save(StoreLocation("DDStore", store))
+                    storeLocationRepository.save(StoreLocation("DDStore", store =store))
                     ddStoreExists = true
                 }
 
@@ -45,7 +54,7 @@ class ImportProductServiceImplementation(
                     for (storeLocationName in scrapedProduct.availabilityArray.split(";")) {
                         if (storeLocationName.isNotEmpty()) {
                             if (!storeLocationRepository.existsByName(storeLocationName)) {
-                                storeLocations.add(StoreLocation(storeLocationName, store))
+                                storeLocations.add(StoreLocation(storeLocationName, store = store))
                             } else {
                                 storeLocations.add(storeLocationRepository.findByName(storeLocationName).get())
                             }
@@ -54,7 +63,7 @@ class ImportProductServiceImplementation(
                 }
                 if (storeName == "DDStore" && scrapedProduct.isAvailable) {
                     if (!storeLocationRepository.existsByName("DDStore")) {
-                        storeLocations.add(StoreLocation("DDStore", store))
+                        storeLocations.add(StoreLocation(name = "DDStore", store = store))
                     } else {
                         storeLocations.add(storeLocationRepository.findByName("DDStore").get())
                     }
@@ -68,7 +77,7 @@ class ImportProductServiceImplementation(
                     product = productRepository.findByOriginalId(scrapedProduct.originalId).get()
                     productInStoreLocationRepository.deleteByProduct(product)
                 } else {
-                    product = prepareProduct(scrapedProduct) ?: continue
+                    product = prepareProduct(scrapedProduct, store) ?: continue
                     product.category = category
                     product = productRepository.save(product)
                 }
@@ -82,7 +91,7 @@ class ImportProductServiceImplementation(
         }
     }
 
-    override fun prepareProduct(scrapedProduct: ScrapedProduct): Product? {
+    override fun prepareProduct(scrapedProduct: ScrapedProduct, store: Store): Product? {
         val productFactory: AbstractProductFactory = when (scrapedProduct.productType) {
             "CPU" -> ProcessorFactory(scrapedProduct)
             "CASE" -> CaseFactory(scrapedProduct)
@@ -96,6 +105,6 @@ class ImportProductServiceImplementation(
             else -> return null
         }
 
-        return productFactory.prepareProduct()
+        return productFactory.prepareProduct(store)
     }
 }

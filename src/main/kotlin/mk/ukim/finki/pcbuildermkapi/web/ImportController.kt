@@ -8,7 +8,7 @@ import org.springframework.web.multipart.MultipartFile
 
 
 @RestController
-@RequestMapping("/import")
+@RequestMapping("/api/import")
 @CrossOrigin
 class ImportController(
     private val importProductService: ImportProductService

@@ -1,6 +1,6 @@
 package mk.ukim.finki.pcbuildermkapi.utils.entityFactory.product
 
-import mk.ukim.finki.pcbuildermkapi.domain.dto.ScrapedProduct
+import mk.ukim.finki.pcbuildermkapi.domain.dto.`in`.ScrapedProduct
 import mk.ukim.finki.pcbuildermkapi.domain.enumeation.RamType
 import mk.ukim.finki.pcbuildermkapi.domain.model.Product
 import mk.ukim.finki.pcbuildermkapi.domain.model.ProductCompatibilityAttributes
@@ -11,15 +11,15 @@ class RamFactory(scrapedProduct: ScrapedProduct) : AbstractProductFactory(scrape
     private var ramSpeed: String? = null
 
     override fun prepareAnhochProduct(): Product {
-        val nameSplit = scrapedProduct.name.split("\\s+")
+        val nameSplit = scrapedProduct.name.split("\\s+".toRegex())
         for(nameAttr in nameSplit) {
             for(ramTypeEnum in RamType.values()) {
-                if(nameAttr.equals(ramTypeEnum.toString(), ignoreCase = true)) {
+                if(nameAttr.uppercase() == ramTypeEnum.toString()) {
                     ramType = ramTypeEnum
                 }
             }
 
-            if(nameAttr.lowercase().endsWith("mhz")) {
+            if(nameAttr.uppercase().endsWith("MHZ")) {
                 ramSpeed = nameAttr.uppercase()
             }
         }
@@ -30,7 +30,7 @@ class RamFactory(scrapedProduct: ScrapedProduct) : AbstractProductFactory(scrape
     override fun prepareSetecProduct(): Product {
         val descriptionSplit = scrapedProduct.description
             .replace(",", "")
-            .split("\\s+")
+            .split("\\s+".toRegex())
         var prevIndex = -1
         for(descriptionAttr in descriptionSplit) {
             for(ramTypeEnum in RamType.values()) {
@@ -54,7 +54,7 @@ class RamFactory(scrapedProduct: ScrapedProduct) : AbstractProductFactory(scrape
 
     override fun prepareDDStoreProduct(): Product {
         val nameSplit = scrapedProduct.name
-            .split("\\s+")
+            .split("\\s+".toRegex())
         var prevIndex = -1
         for(nameAttr in nameSplit) {
             for(ramTypeEnum in RamType.values()) {

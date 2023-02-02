@@ -1,4 +1,4 @@
-package mk.ukim.finki.pcbuildermkapi.domain.dto
+package mk.ukim.finki.pcbuildermkapi.domain.dto.`in`
 
 import com.google.gson.annotations.SerializedName
 

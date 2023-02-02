@@ -1,10 +1,14 @@
 package mk.ukim.finki.pcbuildermkapi.service
 
-import mk.ukim.finki.pcbuildermkapi.domain.dto.LoginCredentials
-import mk.ukim.finki.pcbuildermkapi.domain.dto.RegisterCredentials
+import jakarta.servlet.http.HttpServletRequest
+import mk.ukim.finki.pcbuildermkapi.domain.dto.`in`.LoginRequest
+import mk.ukim.finki.pcbuildermkapi.domain.dto.`in`.RegisterRequest
+import mk.ukim.finki.pcbuildermkapi.domain.model.security.User
 import org.springframework.http.ResponseEntity
 
 interface AuthenticationService {
-    fun register(registerCredentials: RegisterCredentials): ResponseEntity<Any>
-    fun login(loginCredentials: LoginCredentials): ResponseEntity<Any>
+    fun register(registerRequest: RegisterRequest): ResponseEntity<Any>
+    fun login(loginRequest: LoginRequest): ResponseEntity<Any>
+    fun extractEmailFromJwt(request: HttpServletRequest): String
+    fun findUserByEmail(email: String): User
 }

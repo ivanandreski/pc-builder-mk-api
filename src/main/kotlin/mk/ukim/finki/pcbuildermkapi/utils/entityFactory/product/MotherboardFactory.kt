@@ -1,6 +1,6 @@
 package mk.ukim.finki.pcbuildermkapi.utils.entityFactory.product
 
-import mk.ukim.finki.pcbuildermkapi.domain.dto.ScrapedProduct
+import mk.ukim.finki.pcbuildermkapi.domain.dto.`in`.ScrapedProduct
 import mk.ukim.finki.pcbuildermkapi.domain.enumeation.*
 import mk.ukim.finki.pcbuildermkapi.domain.model.Product
 import mk.ukim.finki.pcbuildermkapi.domain.model.ProductCompatibilityAttributes
@@ -9,6 +9,7 @@ class MotherboardFactory(scrapedProduct: ScrapedProduct) : AbstractProductFactor
     private var chipset: Chipset? = null
     private var formFactor: FormFactor? = null
     private var socket: Socket? = null
+    private var ramType: RamType? = null
     private var processorManufacturer: ProcessorManufacturer? = null
     private var numOfRamSlots: Int? = null
     private var numOfSataPorts: Int? = null
@@ -19,6 +20,13 @@ class MotherboardFactory(scrapedProduct: ScrapedProduct) : AbstractProductFactor
             processorManufacturer = ProcessorManufacturer.INTEL
         } else if (scrapedProduct.description.uppercase().contains(ProcessorManufacturer.AMD.toString())) {
             processorManufacturer = ProcessorManufacturer.AMD
+        }
+
+        for(ramTypeEnum in RamType.values()) {
+            if(scrapedProduct.name.uppercase().contains(ramTypeEnum.toString())) {
+                ramType = ramTypeEnum
+                break
+            }
         }
 
         for (socketEnum in Socket.values()) {
@@ -45,6 +53,13 @@ class MotherboardFactory(scrapedProduct: ScrapedProduct) : AbstractProductFactor
             processorManufacturer = ProcessorManufacturer.INTEL
         } else if (scrapedProduct.description.uppercase().contains(ProcessorManufacturer.AMD.toString())) {
             processorManufacturer = ProcessorManufacturer.AMD
+        }
+
+        for(ramTypeEnum in RamType.values()) {
+            if(scrapedProduct.description.uppercase().contains(ramTypeEnum.toString())) {
+                ramType = ramTypeEnum
+                break
+            }
         }
 
         for (socketEnum in Socket.values()) {
@@ -75,15 +90,19 @@ class MotherboardFactory(scrapedProduct: ScrapedProduct) : AbstractProductFactor
             processorManufacturer = ProcessorManufacturer.AMD
         }
 
+        for(ramTypeEnum in RamType.values()) {
+            if(scrapedProduct.description.uppercase().contains(ramTypeEnum.toString()) ||
+                scrapedProduct.name.uppercase().contains(ramTypeEnum.toString())) {
+                ramType = ramTypeEnum
+                break
+            }
+        }
+
         for (socketEnum in Socket.values()) {
             val parsedSocketName = socketEnum.toString()
                 .uppercase()
                 .replace("_", "")
-            if (scrapedProduct.name.uppercase().contains(
-                    socketEnum.toString()
-                        .uppercase()
-                        .replace("_", "")
-                ) ||
+            if (scrapedProduct.name.uppercase().contains(parsedSocketName) ||
                 scrapedProduct.description.uppercase().contains(parsedSocketName) ||
                 scrapedProduct.description.uppercase().contains("Socket " + socketEnum.shortVal)
             ) {
@@ -111,6 +130,7 @@ class MotherboardFactory(scrapedProduct: ScrapedProduct) : AbstractProductFactor
             numOfRamSlots = numOfRamSlots,
             numOfSataPorts = numOfSataPorts,
             numOfM2Slots = numOfM2Slots,
+            ramType = ramType
         )
 
         return product

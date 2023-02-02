@@ -1,12 +1,10 @@
 package mk.ukim.finki.pcbuildermkapi.web
 
-import mk.ukim.finki.pcbuildermkapi.domain.dto.LoginCredentials
-import mk.ukim.finki.pcbuildermkapi.domain.dto.RegisterCredentials
+import mk.ukim.finki.pcbuildermkapi.domain.dto.`in`.LoginRequest
+import mk.ukim.finki.pcbuildermkapi.domain.dto.`in`.RegisterRequest
 import mk.ukim.finki.pcbuildermkapi.service.AuthenticationService
-import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.CrossOrigin
-import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
@@ -21,15 +19,15 @@ class AuthenticationController(
 
     @PostMapping("/register")
     fun register(
-        @RequestBody registerCredentials: RegisterCredentials
+        @RequestBody registerRequest: RegisterRequest
     ): ResponseEntity<Any> {
-        return authenticationService.register(registerCredentials)
+        return authenticationService.register(registerRequest)
     }
 
     @PostMapping("/login")
     fun login(
-        @RequestBody loginCredentials: LoginCredentials
+        @RequestBody loginRequest: LoginRequest
     ): ResponseEntity<Any> {
-        return authenticationService.login(loginCredentials)
+        return authenticationService.login(loginRequest)
     }
 }

@@ -1,10 +1,12 @@
 package mk.ukim.finki.pcbuildermkapi.domain.model
 
 import jakarta.persistence.*
+import mk.ukim.finki.pcbuildermkapi.utils.toSlug
 
 @Entity
 class StoreLocation(
     var name: String,
+    val slug: String = name.toSlug(),
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "store_id", nullable = false)

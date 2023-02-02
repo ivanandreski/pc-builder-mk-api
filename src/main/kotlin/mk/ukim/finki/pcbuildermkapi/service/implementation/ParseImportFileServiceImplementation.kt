@@ -1,8 +1,7 @@
 package mk.ukim.finki.pcbuildermkapi.service.implementation
 
 import com.google.gson.Gson
-import mk.ukim.finki.pcbuildermkapi.domain.dto.ScrapedProduct
-import mk.ukim.finki.pcbuildermkapi.domain.dto.ScrapedProductList
+import mk.ukim.finki.pcbuildermkapi.domain.dto.`in`.ScrapedProduct
 import mk.ukim.finki.pcbuildermkapi.service.ParseImportFileService
 import org.springframework.stereotype.Service
 import org.springframework.web.multipart.MultipartFile

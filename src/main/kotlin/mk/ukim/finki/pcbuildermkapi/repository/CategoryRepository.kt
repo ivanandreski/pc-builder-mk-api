@@ -9,4 +9,5 @@ import java.util.*
 @Repository
 interface CategoryRepository : JpaRepository<Category, Long> {
     fun findByName(name: String): Optional<Category>
+    fun findBySlug(slug: String): Optional<Category>
 }

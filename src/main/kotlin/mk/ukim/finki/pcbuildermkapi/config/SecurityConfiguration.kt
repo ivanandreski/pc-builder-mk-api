@@ -2,6 +2,7 @@ package mk.ukim.finki.pcbuildermkapi.config
 
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
+import mk.ukim.finki.pcbuildermkapi.domain.model.security.Role
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.security.authentication.AuthenticationProvider
@@ -25,10 +26,10 @@ class SecurityConfiguration(
             .csrf()
             .disable()
             .authorizeHttpRequests()
-//            .requestMatchers("/api/auth/**")
-//            .permitAll()
-//            .anyRequest()
-//            .authenticated()
+            .requestMatchers("/api/customPcBuild/**")
+            .authenticated()
+            .requestMatchers("/api/import/**")
+            .hasRole(Role.ADMIN.toString())
             .anyRequest()
             .permitAll()
             .and()
