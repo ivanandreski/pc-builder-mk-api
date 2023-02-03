@@ -1,10 +1,12 @@
 package mk.ukim.finki.pcbuildermkapi.domain.model
 
+import com.fasterxml.jackson.annotation.JsonIgnore
 import jakarta.persistence.*
 import mk.ukim.finki.pcbuildermkapi.domain.enumeation.*
 
 @Entity
 data class ProductCompatibilityAttributes(
+    @JsonIgnore
     @OneToOne(mappedBy = "compatibilityAttributes")
     val product: Product,
 

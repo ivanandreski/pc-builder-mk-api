@@ -2,6 +2,7 @@ package mk.ukim.finki.pcbuildermkapi.service.implementation
 
 import mk.ukim.finki.pcbuildermkapi.domain.dto.out.ProductDto
 import mk.ukim.finki.pcbuildermkapi.domain.dto.`in`.ProductRequest
+import mk.ukim.finki.pcbuildermkapi.domain.dto.out.CustomPcBuildProductDto
 import mk.ukim.finki.pcbuildermkapi.domain.model.Product
 import mk.ukim.finki.pcbuildermkapi.repository.CategoryRepository
 import mk.ukim.finki.pcbuildermkapi.repository.ProductRepository
@@ -19,6 +20,7 @@ class ProductServiceImplementation(
             categoryRepository.findBySlug(it).orElse(null)
         }
 
+        // todo with optional params and native queries
         return (if (category == null)
             productRepository.findAll(productRequest.getPageable())
         else
@@ -41,5 +43,19 @@ class ProductServiceImplementation(
                 it.storeLocation.slug to it.storeLocation.name
             }
         )
+    }
+
+    override fun createCustomPcBuildProductDto(product: Product?): CustomPcBuildProductDto? {
+        return if(product == null)
+            return null
+        else {
+            CustomPcBuildProductDto(
+                name = product.displayName,
+                slug = product.slug,
+                price = product.priceMkd,
+                imageUrl = product.imageUrl,
+                categorySlug = product.category!!.slug
+            )
+        }
     }
 }

@@ -28,7 +28,6 @@ class CustomPcBuildController(
         return ResponseEntity.ok(
             customPcBuildService.addProductToCustomPcBuild(
                 customPcBuildRequest.productSlug,
-                customPcBuildRequest.productSlug,
                 user
             )
         )
@@ -44,7 +43,6 @@ class CustomPcBuildController(
         )
         return ResponseEntity.ok(
             customPcBuildService.removeProductFromCustomPcBuild(
-                customPcBuildRequest.productSlug,
                 customPcBuildRequest.productSlug,
                 user
             )

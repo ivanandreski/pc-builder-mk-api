@@ -5,6 +5,9 @@ import org.springframework.data.domain.Pageable
 import org.springframework.web.bind.annotation.RequestParam
 
 class ProductRequest(
+
+    // FILTERS
+
     @RequestParam
     val category: String? = null,
 
@@ -14,9 +17,25 @@ class ProductRequest(
     @RequestParam
     val pageSize: Int? = null,
 
-    // todo: add store filter, price range filter, isAvailable, list of selected store locations filter
+    @RequestParam
+    val store: String? = null,
+
+    @RequestParam
+    val isAvailable: Boolean? = null,
+
+    @RequestParam
+    val storeLocations: String? = null,
+
+    // SORTING
+
+    @RequestParam
+    val sortParameter: String? = null,
 ) {
     fun getPageable(): Pageable {
         return PageRequest.of(page ?: 1, pageSize ?: 2)
+    }
+
+    fun getStoreLocationSlugs(): List<String> {
+        return storeLocations?.split(",") ?: listOf()
     }
 }

@@ -1,6 +1,7 @@
 package mk.ukim.finki.pcbuildermkapi.domain.model
 
 import jakarta.persistence.*
+import mk.ukim.finki.pcbuildermkapi.domain.dto.out.CustomPcBuildProductDto
 import mk.ukim.finki.pcbuildermkapi.utils.toSlug
 
 @Entity
@@ -37,9 +38,10 @@ data class Product(
     @JoinColumn(name = "store_id", nullable = false)
     var store: Store,
 ) : BaseEntity() {
+
     @OneToMany(mappedBy = "product", cascade = [CascadeType.ALL], orphanRemoval = true)
     val productsInStoreLocation: List<ProductInStoreLocation> = ArrayList()
 
     @OneToMany(mappedBy = "product", cascade = [CascadeType.ALL], orphanRemoval = true)
-    val priceHistory: List<ProductPriceHistory> = ArrayList()
+    val priceHistory: List<ProductPriceHistory> = listOf()
 }

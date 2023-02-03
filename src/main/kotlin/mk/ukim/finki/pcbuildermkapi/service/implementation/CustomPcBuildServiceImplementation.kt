@@ -10,6 +10,7 @@ import mk.ukim.finki.pcbuildermkapi.repository.CustomPcBuildRepository
 import mk.ukim.finki.pcbuildermkapi.repository.ProductRepository
 import mk.ukim.finki.pcbuildermkapi.repository.UserRepository
 import mk.ukim.finki.pcbuildermkapi.service.CustomPcBuildService
+import mk.ukim.finki.pcbuildermkapi.service.ProductService
 import org.springframework.stereotype.Service
 
 @Service
@@ -17,10 +18,11 @@ class CustomPcBuildServiceImplementation(
     private val userRepository: UserRepository,
     private val categoryRepository: CategoryRepository,
     private val productRepository: ProductRepository,
-    private val customPcBuildRepository: CustomPcBuildRepository
+    private val customPcBuildRepository: CustomPcBuildRepository,
+    private val productService: ProductService
 ) : CustomPcBuildService {
-    override fun addProductToCustomPcBuild(productSlug: String, categorySlug: String, user: User): CustomPcBuildDto {
-        val (product, category, customPcBuild) = getProductCategoryAndCustomPcBuild(productSlug, categorySlug, user)
+    override fun addProductToCustomPcBuild(productSlug: String, user: User): CustomPcBuildDto {
+        val (product, category, customPcBuild) = getProductCategoryAndCustomPcBuild(productSlug, user)
 
         when (category.name) {
             "CASE" -> customPcBuild.caseId = product.id
@@ -35,8 +37,35 @@ class CustomPcBuildServiceImplementation(
         return createCustomPcBuildDto(customPcBuildRepository.save(customPcBuild))
     }
 
-    override fun removeProductFromCustomPcBuild(productSlug: String, categorySlug: String, user: User): CustomPcBuildDto {
-        val (product, category, customPcBuild) = getProductCategoryAndCustomPcBuild(productSlug, categorySlug, user)
+    override fun removeProductFromCustomPcBuild(productSlug: String, user: User): CustomPcBuildDto {
+        val (product, category, customPcBuild) = getProductCategoryAndCustomPcBuild(productSlug, user)
+
+        var flag = false
+        var newRamIds = ""
+        val ramIdsSplit = customPcBuild.ramIds.split(",").stream().skip(1).toList()
+        for (ramId in ramIdsSplit) {
+            if (!flag && ramId.toLong() == product.id) {
+                flag = true
+                continue
+            }
+
+            if (ramId.toLong() != product.id || (ramId.toLong() == product.id && flag)) {
+                newRamIds += ",$ramId"
+            }
+        }
+        flag = false
+        var newStorageIds = ""
+        val storageIdsSplit = customPcBuild.storageIds.split(",").stream().skip(1).toList()
+        for (storageId in storageIdsSplit) {
+            if (!flag && storageId.toLong() == product.id) {
+                flag = true
+                continue
+            }
+
+            if (storageId.toLong() != product.id || (storageId.toLong() == product.id && flag)) {
+                newStorageIds += "," + product.id
+            }
+        }
 
         when (category.name) {
             "CASE" -> customPcBuild.caseId = null
@@ -44,39 +73,8 @@ class CustomPcBuildServiceImplementation(
             "MB" -> customPcBuild.motherboardId = null
             "PSU" -> customPcBuild.powerSupplyId = null
             "CPU" -> customPcBuild.processorId = null
-            "RAM" -> customPcBuild.ramIds = {
-                var flag = false
-                var newRamIds = ""
-                for (ramId in customPcBuild.ramIds.split(",").stream().skip(1).toList()) {
-                    if (ramId.toLong() == product.id) {
-                        flag = true
-                        continue
-                    }
-
-                    if (ramId.toLong() != product.id || (ramId.toLong() == product.id && flag)) {
-                        newRamIds += "," + product.id
-                    }
-                }
-
-                newRamIds
-            }.toString()
-
-            "STORAGE" -> customPcBuild.storageIds = {
-                var flag = false
-                var newStorageIds = ""
-                for (storageId in customPcBuild.storageIds.split(",").stream().skip(1).toList()) {
-                    if (storageId.toLong() == product.id) {
-                        flag = true
-                        continue
-                    }
-
-                    if (storageId.toLong() != product.id || (storageId.toLong() == product.id && flag)) {
-                        newStorageIds += "," + product.id
-                    }
-                }
-
-                newStorageIds
-            }.toString()
+            "RAM" -> customPcBuild.ramIds = newRamIds
+            "STORAGE" -> customPcBuild.storageIds = newStorageIds
         }
 
         return createCustomPcBuildDto(customPcBuildRepository.save(customPcBuild))
@@ -115,7 +113,7 @@ class CustomPcBuildServiceImplementation(
             .map {
                 productRepository.findById(it.toLong()).orElse(null)
             }.filter {
-                it == null
+                it != null
             }
             .toList()
 
@@ -126,33 +124,34 @@ class CustomPcBuildServiceImplementation(
             .map {
                 productRepository.findById(it.toLong()).orElse(null)
             }.filter {
-                it == null
+                it != null
             }
             .toList()
 
         return CustomPcBuildDto(
-            processor = processor,
-            case = case,
-            motherboard = motherboard,
-            graphicsCard = graphicsCard,
-            powerSupply = powerSupply,
-            storageDevices = storageDevices,
-            ramSticks = ramSticks
+            processor = productService.createCustomPcBuildProductDto(processor),
+            case = productService.createCustomPcBuildProductDto(case),
+            motherboard = productService.createCustomPcBuildProductDto(motherboard),
+            graphicsCard = productService.createCustomPcBuildProductDto(graphicsCard),
+            powerSupply = productService.createCustomPcBuildProductDto(powerSupply),
+            storageDevices = storageDevices.map {
+                productService.createCustomPcBuildProductDto(it)
+            }.toList(),
+            ramSticks = ramSticks.map {
+                productService.createCustomPcBuildProductDto(it)
+            }.toList()
         )
     }
 
     private fun getProductCategoryAndCustomPcBuild(
         productSlug: String,
-        categorySlug: String,
         user: User
     ): Triple<Product, Category, CustomPcBuild> {
-        val category = categoryRepository.findBySlug(categorySlug)
-            .orElseThrow { Exception("Category with slug: $categorySlug not found") }
         val product = productRepository.findBySlug(productSlug)
             .orElseThrow { Exception("Product with slug $productSlug not found") }
         val customPcBuild = customPcBuildRepository.findByUser(user)
             .orElseThrow { Exception("Custom pc build for user was not found") }
 
-        return Triple(product, category, customPcBuild)
+        return Triple(product, product.category!!, customPcBuild)
     }
 }
