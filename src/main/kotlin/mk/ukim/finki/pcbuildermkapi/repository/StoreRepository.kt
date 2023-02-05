@@ -8,4 +8,5 @@ import java.util.*
 @Repository
 interface StoreRepository : JpaRepository<Store, Long> {
     fun findByName(name: String): Optional<Store>
+    fun findBySlug(slug: String): Optional<Store>
 }
