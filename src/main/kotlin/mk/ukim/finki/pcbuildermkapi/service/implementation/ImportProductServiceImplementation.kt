@@ -78,6 +78,7 @@ class ImportProductServiceImplementation(
                     productInStoreLocationRepository.deleteByProduct(product)
                 } else {
                     product = prepareProduct(scrapedProduct, store) ?: continue
+                    product.available = storeLocations.isNotEmpty()
                     product.category = category
                     product = productRepository.save(product)
                 }

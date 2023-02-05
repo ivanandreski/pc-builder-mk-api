@@ -1,12 +1,10 @@
 package mk.ukim.finki.pcbuildermkapi.domain.model
 
 import com.fasterxml.jackson.annotation.JsonIgnore
-import jakarta.persistence.Entity
-import jakarta.persistence.FetchType
-import jakarta.persistence.JoinColumn
-import jakarta.persistence.ManyToOne
+import jakarta.persistence.*
 
 @Entity
+@Table(name = "product_in_store_location")
 data class ProductInStoreLocation(
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "store_location_id", nullable = false)

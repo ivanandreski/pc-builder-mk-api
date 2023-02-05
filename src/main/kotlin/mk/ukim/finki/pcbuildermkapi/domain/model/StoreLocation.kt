@@ -4,6 +4,7 @@ import jakarta.persistence.*
 import mk.ukim.finki.pcbuildermkapi.utils.toSlug
 
 @Entity
+@Table(name = "store_locations")
 class StoreLocation(
     var name: String,
     val slug: String = name.toSlug(),

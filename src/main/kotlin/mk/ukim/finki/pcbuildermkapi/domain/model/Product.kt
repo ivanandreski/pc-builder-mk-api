@@ -5,6 +5,7 @@ import mk.ukim.finki.pcbuildermkapi.domain.dto.out.CustomPcBuildProductDto
 import mk.ukim.finki.pcbuildermkapi.utils.toSlug
 
 @Entity
+@Table(name = "products")
 data class Product(
     val name: String,
     val slug: String = name.toSlug(),
@@ -22,6 +23,9 @@ data class Product(
     var description: String,
 
     var manufacturer: String,
+
+    @Column(columnDefinition = "boolean default false")
+    var available: Boolean = false,
 
     @Column(columnDefinition = "boolean default false")
     var discontinued: Boolean = false,

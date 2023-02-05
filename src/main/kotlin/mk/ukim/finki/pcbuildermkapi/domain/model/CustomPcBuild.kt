@@ -2,9 +2,11 @@ package mk.ukim.finki.pcbuildermkapi.domain.model
 
 import jakarta.persistence.Entity
 import jakarta.persistence.OneToOne
+import jakarta.persistence.Table
 import mk.ukim.finki.pcbuildermkapi.domain.model.security.User
 
 @Entity
+@Table(name = "custom_pc_builds")
 data class CustomPcBuild(
     var caseId: Long? = null,
     var graphicsCardId: Long? = null,

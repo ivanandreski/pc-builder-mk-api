@@ -26,18 +26,16 @@ class ProductServiceImplementation(
         val store = productRequest.store?.let {
             storeRepository.findBySlug(productRequest.store).orElse(null)
         }
-        return productRepository.findAll(productRequest.getPageable(), category?.id, store?.id).map {
+        return productRepository.findAll(
+                productRequest.getPageable(),
+                productRequest.search?.uppercase(),
+                category?.id,
+                store?.id,
+                productRequest.isAvailable,
+                productRequest.manufacturer?.uppercase(),
+        ).map {
             createProductDto(it)
         }
-
-        // todo with optional params and native queries
-//        return (if (category == null)
-//            productRepository.findAll(productRequest.getPageable())
-//        else
-//            productRepository.findByCategory(category, productRequest.getPageable()))
-//            .map {
-//                createProductDto(it)
-//            }
     }
 
     override fun createProductDto(product: Product): ProductDto {
@@ -49,6 +47,7 @@ class ProductServiceImplementation(
                 categorySlug = product.category?.slug ?: "Unknown",
                 storeName = product.store.displayName,
                 storeImageUrl = product.store.imageUrl ?: "",
+                isAvailable = product.available,
                 storeLocationSlugs = product.productsInStoreLocation.associate {
                     it.storeLocation.slug to it.storeLocation.name
                 }
@@ -64,7 +63,8 @@ class ProductServiceImplementation(
                     slug = product.slug,
                     price = product.priceMkd,
                     imageUrl = product.imageUrl,
-                    categorySlug = product.category!!.slug
+                    categorySlug = product.category!!.slug,
+                    isAvailable = product.available,
             )
         }
     }

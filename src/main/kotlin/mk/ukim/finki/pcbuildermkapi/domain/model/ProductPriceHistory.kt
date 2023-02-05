@@ -1,11 +1,9 @@
 package mk.ukim.finki.pcbuildermkapi.domain.model
 
-import jakarta.persistence.Entity
-import jakarta.persistence.FetchType
-import jakarta.persistence.JoinColumn
-import jakarta.persistence.ManyToOne
+import jakarta.persistence.*
 
 @Entity
+@Table(name = "product_price_history")
 data class ProductPriceHistory(
     val price: Double,
 

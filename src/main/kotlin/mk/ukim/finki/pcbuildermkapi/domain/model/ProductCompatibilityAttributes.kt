@@ -5,6 +5,7 @@ import jakarta.persistence.*
 import mk.ukim.finki.pcbuildermkapi.domain.enumeation.*
 
 @Entity
+@Table(name = "product_compatibility_attributes")
 data class ProductCompatibilityAttributes(
     @JsonIgnore
     @OneToOne(mappedBy = "compatibilityAttributes")
