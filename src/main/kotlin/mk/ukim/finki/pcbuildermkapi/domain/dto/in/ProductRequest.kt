@@ -21,9 +21,6 @@ class ProductRequest(
     val store: String? = null,
 
     @RequestParam
-    val isAvailable: Boolean? = null,
-
-    @RequestParam
     val storeLocations: String? = null,
 
     // SORTING
