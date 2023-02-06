@@ -28,7 +28,7 @@ class ProductRequest(
         val isAvailable: Boolean? = null,
 
         @RequestParam
-        val startPrice: Double? = null,
+        val startPrice: Double = 0.0,
 
         @RequestParam
         val endPrice: Double? = null,

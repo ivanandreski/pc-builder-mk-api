@@ -14,43 +14,51 @@ import org.springframework.stereotype.Service
 
 @Service
 class ProductServiceImplementation(
-        private val categoryRepository: CategoryRepository,
-        private val productRepository: ProductRepository,
-        private val storeLocationRepository: StoreLocationRepository,
-        private val storeRepository: StoreRepository
+    private val categoryRepository: CategoryRepository,
+    private val productRepository: ProductRepository,
+    private val storeLocationRepository: StoreLocationRepository,
+    private val storeRepository: StoreRepository
 ) : ProductService {
-    override fun getAll(productRequest: ProductRequest): Page<ProductDto> {
+    override fun getAll(productRequest: ProductRequest): Any {
         val category = productRequest.category?.let {
             categoryRepository.findBySlug(it).orElse(null)
         }
         val store = productRequest.store?.let {
             storeRepository.findBySlug(productRequest.store).orElse(null)
         }
-        return productRepository.findAll(
-                productRequest.getPageable(),
-                productRequest.search?.uppercase(),
-                category?.id,
-                store?.id,
-                productRequest.isAvailable,
-                productRequest.manufacturer?.uppercase(),
+        val page = productRepository.findAll(
+            productRequest.getPageable(),
+            productRequest.search?.uppercase(),
+            category?.id,
+            store?.id,
+            productRequest.isAvailable,
+            productRequest.manufacturer?.uppercase(),
+            productRequest.startPrice,
+            productRequest.endPrice
         ).map {
             createProductDto(it)
+        }
+
+        return object {
+            val content = page
+            val minPrice = productRepository.getMinProductPrice()
+            val maxPrice = productRepository.getMaxProductPrice()
         }
     }
 
     override fun createProductDto(product: Product): ProductDto {
         return ProductDto(
-                name = product.displayName,
-                slug = product.slug,
-                price = product.priceMkd,
-                imageUrl = product.imageUrl,
-                categorySlug = product.category?.slug ?: "Unknown",
-                storeName = product.store.displayName,
-                storeImageUrl = product.store.imageUrl ?: "",
-                isAvailable = product.available,
-                storeLocationSlugs = product.productsInStoreLocation.associate {
-                    it.storeLocation.slug to it.storeLocation.name
-                }
+            name = product.displayName,
+            slug = product.slug,
+            price = product.priceMkd,
+            imageUrl = product.imageUrl,
+            categorySlug = product.category?.slug ?: "Unknown",
+            storeName = product.store.displayName,
+            storeImageUrl = product.store.imageUrl ?: "",
+            isAvailable = product.available,
+            storeLocationSlugs = product.productsInStoreLocation.associate {
+                it.storeLocation.slug to it.storeLocation.name
+            }
         )
     }
 
@@ -59,12 +67,12 @@ class ProductServiceImplementation(
             return null
         else {
             CustomPcBuildProductDto(
-                    name = product.displayName,
-                    slug = product.slug,
-                    price = product.priceMkd,
-                    imageUrl = product.imageUrl,
-                    categorySlug = product.category!!.slug,
-                    isAvailable = product.available,
+                name = product.displayName,
+                slug = product.slug,
+                price = product.priceMkd,
+                imageUrl = product.imageUrl,
+                categorySlug = product.category!!.slug,
+                isAvailable = product.available,
             )
         }
     }

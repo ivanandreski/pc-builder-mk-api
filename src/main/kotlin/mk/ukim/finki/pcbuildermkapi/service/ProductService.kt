@@ -7,7 +7,7 @@ import mk.ukim.finki.pcbuildermkapi.domain.model.Product
 import org.springframework.data.domain.Page
 
 interface ProductService {
-    fun getAll(productRequest: ProductRequest): Page<ProductDto>
+    fun getAll(productRequest: ProductRequest): Any
 
     fun createProductDto(product: Product): ProductDto
 
