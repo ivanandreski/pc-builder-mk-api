@@ -46,8 +46,8 @@ class ProductRequest(
 ) {
     fun getPageable(): Pageable {
         return PageRequest.of(
-                page ?: 1,
-                pageSize ?: 2,
+                page ?: 0,
+                pageSize ?: 12,
                 getSortColumn()
         )
     }
