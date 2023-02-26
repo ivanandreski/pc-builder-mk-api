@@ -3,6 +3,7 @@ package mk.ukim.finki.pcbuildermkapi.service.implementation
 import mk.ukim.finki.pcbuildermkapi.domain.dto.out.ProductDto
 import mk.ukim.finki.pcbuildermkapi.domain.dto.`in`.ProductRequest
 import mk.ukim.finki.pcbuildermkapi.domain.dto.out.CustomPcBuildProductDto
+import mk.ukim.finki.pcbuildermkapi.domain.dto.out.StoreLocationDto
 import mk.ukim.finki.pcbuildermkapi.domain.model.Product
 import mk.ukim.finki.pcbuildermkapi.repository.CategoryRepository
 import mk.ukim.finki.pcbuildermkapi.repository.ProductRepository
@@ -56,9 +57,17 @@ class ProductServiceImplementation(
             storeName = product.store.displayName,
             storeImageUrl = product.store.imageUrl ?: "",
             isAvailable = product.available,
-            storeLocationSlugs = product.productsInStoreLocation.associate {
-                it.storeLocation.slug to it.storeLocation.name
-            }
+//            storeLocationSlugs = product.productsInStoreLocation.associate {
+//                it.storeLocation.slug to it.storeLocation.name
+//            }
+            storeLocations = product.productsInStoreLocation.map{
+                StoreLocationDto(
+                    slug = it.storeLocation.slug,
+                    name = it.storeLocation.name,
+                    longitude = it.storeLocation.longitude,
+                    latitude = it.storeLocation.latitude,
+                )
+            }.toList()
         )
     }
 

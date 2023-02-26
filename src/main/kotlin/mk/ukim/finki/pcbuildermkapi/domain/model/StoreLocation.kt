@@ -19,9 +19,9 @@ class StoreLocation(
 
     var phone: String? = null,
 
-    var longitude: Long? = null,
+    var longitude: Double? = null,
 
-    var latitude: Long? = null,
+    var latitude: Double? = null,
 ) : BaseEntity() {
     @OneToMany(mappedBy = "storeLocation", cascade = [CascadeType.ALL], orphanRemoval = true)
     val products: List<ProductInStoreLocation> = ArrayList()

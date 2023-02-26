@@ -8,6 +8,6 @@ data class ProductDto(
     val categorySlug: String,
     val storeName: String,
     val storeImageUrl: String,
-    val storeLocationSlugs: Map<String, String>,
-    val isAvailable: Boolean = storeLocationSlugs.isNotEmpty()
+    val storeLocations: List<StoreLocationDto>,
+    val isAvailable: Boolean = storeLocations.isNotEmpty()
 )
