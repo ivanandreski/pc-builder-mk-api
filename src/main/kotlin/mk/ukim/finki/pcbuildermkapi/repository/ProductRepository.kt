@@ -49,11 +49,11 @@ interface ProductRepository : JpaRepository<Product, Long> {
         "select min(p.price_mkd) " +
                 "from products as p", nativeQuery = true
     )
-    fun getMinProductPrice(): Double
+    fun getMinProductPrice(): Double?
 
     @Query(
         "select max(p.price_mkd) " +
                 "from products as p", nativeQuery = true
     )
-    fun getMaxProductPrice(): Double
+    fun getMaxProductPrice(): Double?
 }

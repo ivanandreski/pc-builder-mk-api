@@ -1,0 +1,34 @@
+version: "3"
+
+services:
+  db:
+    container_name: db
+    image: postgres
+    restart: always
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_DB=pc-builder-mk
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+
+  api:
+    container_name: api
+    image: pc-builder-mk-api
+    depends_on:
+      - db
+    build:
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/pc-builder-mk
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: postgres
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
+    command: ["java", "-jar", "/app/pcbuildermkapi.jar"]
+
+volumes:
+  postgres-data:

@@ -42,8 +42,8 @@ class ProductServiceImplementation(
 
         return object {
             val content = page
-            val minPrice = productRepository.getMinProductPrice()
-            val maxPrice = productRepository.getMaxProductPrice()
+            val minPrice = productRepository.getMinProductPrice() ?: 0
+            val maxPrice = productRepository.getMaxProductPrice() ?: 0
         }
     }
 
