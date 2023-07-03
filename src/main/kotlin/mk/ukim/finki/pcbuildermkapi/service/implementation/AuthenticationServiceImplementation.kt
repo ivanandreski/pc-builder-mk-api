@@ -40,6 +40,7 @@ class AuthenticationServiceImplementation(
 
         return ResponseEntity.ok(object {
             val token = jwtService.generateToken(user)
+            val email = user.username
         })
     }
 
@@ -55,6 +56,7 @@ class AuthenticationServiceImplementation(
                 .orElseThrow { Exception("User not found") }
             ResponseEntity.ok(object {
                 val token = jwtService.generateToken(user)
+                val email = user.username
             })
         } catch (authExc: AuthenticationException) {
             ResponseEntity("Invalid login", HttpStatus.UNAUTHORIZED)
