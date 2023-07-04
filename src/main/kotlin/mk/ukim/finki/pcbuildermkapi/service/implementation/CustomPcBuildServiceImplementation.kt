@@ -129,6 +129,7 @@ class CustomPcBuildServiceImplementation(
             .toList()
 
         return CustomPcBuildDto(
+            modifiedAt = customPcBuild.modifiedAt,
             processor = productService.createCustomPcBuildProductDto(processor),
             case = productService.createCustomPcBuildProductDto(case),
             motherboard = productService.createCustomPcBuildProductDto(motherboard),

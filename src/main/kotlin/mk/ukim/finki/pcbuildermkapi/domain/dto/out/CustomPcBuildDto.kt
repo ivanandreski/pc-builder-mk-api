@@ -1,6 +1,7 @@
 package mk.ukim.finki.pcbuildermkapi.domain.dto.out
 
 import mk.ukim.finki.pcbuildermkapi.domain.model.Product
+import java.time.LocalDateTime
 
 data class CustomPcBuildDto(
     val case: CustomPcBuildProductDto? = null,
@@ -10,4 +11,6 @@ data class CustomPcBuildDto(
     val processor: CustomPcBuildProductDto? = null,
     val storageDevices: List<CustomPcBuildProductDto?> = listOf(),
     val ramSticks: List<CustomPcBuildProductDto?> = listOf(),
+
+    val modifiedAt: LocalDateTime
 )

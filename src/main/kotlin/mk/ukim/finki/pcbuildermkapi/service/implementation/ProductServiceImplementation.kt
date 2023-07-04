@@ -60,6 +60,7 @@ class ProductServiceImplementation(
 //            storeLocationSlugs = product.productsInStoreLocation.associate {
 //                it.storeLocation.slug to it.storeLocation.name
 //            }
+            compatibilityTags = product.compatibilityAttributes,
             storeLocations = product.productsInStoreLocation.map{
                 StoreLocationDto(
                     slug = it.storeLocation.slug,

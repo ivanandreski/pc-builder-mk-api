@@ -1,5 +1,7 @@
 package mk.ukim.finki.pcbuildermkapi.domain.dto.out
 
+import mk.ukim.finki.pcbuildermkapi.domain.model.ProductCompatibilityAttributes
+
 data class ProductDto(
     val name: String,
     val slug: String,
@@ -8,6 +10,7 @@ data class ProductDto(
     val categorySlug: String,
     val storeName: String,
     val storeImageUrl: String,
+    val compatibilityTags: ProductCompatibilityAttributes?,
     val storeLocations: List<StoreLocationDto>,
     val isAvailable: Boolean = storeLocations.isNotEmpty()
 )
