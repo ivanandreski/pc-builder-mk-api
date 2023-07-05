@@ -8,4 +8,6 @@ interface CustomPcBuildService {
     fun addProductToCustomPcBuild(productSlug: String,user: User): CustomPcBuildDto
     fun removeProductFromCustomPcBuild(productSlug: String, user: User): CustomPcBuildDto
     fun createCustomPcBuildDto(customPcBuild: CustomPcBuild): CustomPcBuildDto
+
+    fun getCustomPcBuild(user: User): CustomPcBuildDto
 }

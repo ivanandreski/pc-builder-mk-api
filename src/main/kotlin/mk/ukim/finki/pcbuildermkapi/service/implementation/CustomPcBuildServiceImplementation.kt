@@ -144,6 +144,12 @@ class CustomPcBuildServiceImplementation(
         )
     }
 
+    override fun getCustomPcBuild(user: User): CustomPcBuildDto {
+        val customPcBuild = user.customPcBuild
+
+        return createCustomPcBuildDto(customPcBuild!!)
+    }
+
     private fun getProductCategoryAndCustomPcBuild(
         productSlug: String,
         user: User

@@ -57,9 +57,6 @@ class ProductServiceImplementation(
             storeName = product.store.displayName,
             storeImageUrl = product.store.imageUrl ?: "",
             isAvailable = product.available,
-//            storeLocationSlugs = product.productsInStoreLocation.associate {
-//                it.storeLocation.slug to it.storeLocation.name
-//            }
             compatibilityTags = product.compatibilityAttributes,
             storeLocations = product.productsInStoreLocation.map{
                 StoreLocationDto(
@@ -81,8 +78,19 @@ class ProductServiceImplementation(
                 slug = product.slug,
                 price = product.priceMkd,
                 imageUrl = product.imageUrl,
-                categorySlug = product.category!!.slug,
+                categorySlug = product.category?.slug ?: "Unknown",
+                storeName = product.store.displayName,
+                storeImageUrl = product.store.imageUrl ?: "",
                 isAvailable = product.available,
+                compatibilityTags = product.compatibilityAttributes,
+                storeLocations = product.productsInStoreLocation.map{
+                    StoreLocationDto(
+                        slug = it.storeLocation.slug,
+                        name = it.storeLocation.name,
+                        longitude = it.storeLocation.longitude,
+                        latitude = it.storeLocation.latitude,
+                    )
+                }.toList()
             )
         }
     }
