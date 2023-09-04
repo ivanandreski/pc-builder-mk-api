@@ -9,5 +9,6 @@ import java.util.*
 @Repository
 interface StoreLocationRepository : JpaRepository<StoreLocation, Long> {
     fun findByName(name: String): Optional<StoreLocation>
+    fun findBySlug(slug: String): Optional<StoreLocation>
     fun existsByName(name: String): Boolean
 }

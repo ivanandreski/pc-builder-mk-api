@@ -41,6 +41,7 @@ class AuthenticationServiceImplementation(
         return ResponseEntity.ok(object {
             val token = jwtService.generateToken(user)
             val email = user.username
+            val role = user.role
         })
     }
 
@@ -57,6 +58,7 @@ class AuthenticationServiceImplementation(
             ResponseEntity.ok(object {
                 val token = jwtService.generateToken(user)
                 val email = user.username
+                val role = user.role
             })
         } catch (authExc: AuthenticationException) {
             ResponseEntity("Invalid login", HttpStatus.UNAUTHORIZED)
