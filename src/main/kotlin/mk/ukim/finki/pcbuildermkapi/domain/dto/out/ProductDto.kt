@@ -6,6 +6,8 @@ data class ProductDto(
     val name: String,
     val slug: String,
     val price: Double,
+    val description: String,
+    val originalUrl: String,
     val imageUrl: String,
     val categorySlug: String,
     val storeName: String,

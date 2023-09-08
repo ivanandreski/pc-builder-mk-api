@@ -51,7 +51,9 @@ class ProductServiceImplementation(
         return ProductDto(
             name = product.displayName,
             slug = product.slug,
+            description = product.description,
             price = product.priceMkd,
+            originalUrl = product.originalUrl,
             imageUrl = product.imageUrl,
             categorySlug = product.category?.slug ?: "Unknown",
             storeName = product.store.displayName,
